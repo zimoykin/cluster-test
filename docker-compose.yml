@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: app-cluster
+    build: 
+      context: .
+    env_file:
+      - .docker.env
+    ports:
+      - '8001:8001'
+  redis:
+    container_name: redis-cache-test
+    image: redis:alpine
+    env_file:
+      - .docker.env
+    ports:
+      - '6383:6379'
+
+networks:
+  frontend:
+  backend:
+    driver: bridge
