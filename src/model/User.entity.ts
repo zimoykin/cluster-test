@@ -1,7 +1,8 @@
-import { ApiModel, BeforeCreate, Model, Property } from "zimoykin-dynamodb-orm"
+import { ApiModel, BeforeCreate, Model, Property, Unique } from "zimoykin-dynamodb-orm"
 import { hashSync } from 'bcrypt'
 
 @Model()
+@Unique('email')
 export class User extends ApiModel {
     @Property({ nullable: false, validate: 'asString', output: true })
     firstName: string

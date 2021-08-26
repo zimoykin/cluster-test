@@ -3,7 +3,7 @@ import * as os from "os"
 import * as process from 'process'
 import * as express from 'express'
 import { json } from "body-parser"
-import router from "../controller"
+import router from "../controller/shared"
 
 const cluster = (cls as any)
 
@@ -37,7 +37,7 @@ const startWorker = () => {
 }
 
 const master = () => {
-  let cpus = Math.min(os.cpus().length,4)
+  let cpus = os.cpus().length
   console.log(`👨‍👦‍👦 cluster started on ${os.platform()} platform and use ${cpus} cpu`)
   console.log(`free memory: ${os.freemem() / 1024 / 1024} mb`)
   for (let i = 0; i < cpus; i++) cluster.fork()

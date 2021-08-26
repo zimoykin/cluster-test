@@ -4,14 +4,14 @@ import cluster from "./utils/cluster"
  
 dotenv.config()
 
-console.log(parseInt(process.env.REDIS_PORT))
+console.log('init database for ', process.env.DB_PREFIX)
 export const db = DBConnector.getInstance({
     region: process.env.REGION,
     credentials: {
         accessKeyId: process.env.AWSAccessKeyId,
         secretAccessKey: process.env.AWSSecretKey
     }, 
-    databaseName: 'dblibtest',
+    databaseName: process.env.DB_PREFIX||'test',
     redis: {
         host: process.env.REDIS_HOST || "localhost",
         port: parseInt(process.env.REDIS_PORT) || 6379

@@ -1,30 +1,23 @@
-import { User } from "../model/User.entity"
-import { Repository } from "zimoykin-dynamodb-orm"
 import { Request, Response } from "express"
+import { User } from "../model/user.entity"
+import { RestController } from "./shared/restApi.controller"
 
-export class UserController {
-    private repo: Repository<User>
-    constructor() {
-        this.repo = new Repository(User)
-    }
+export class UserController extends RestController<User> {
     static instance() {
-        return new UserController()
+        return new UserController(User)
     }
+    login = (req: Request, res: Response) => {
+        this.repo.find({ email: req.body.email }, true, '')
+            .then(users => {
+                const filtred = users.filter(val => val.email === req.body.email)
+                if (filtred.length > 0) {
+                    const user = filtred[0]
+                    if (user.password === req.body.password) {
+                        res.status(200).json({ status: 'okay' })
+                    }
+                } else res.status(404).json({ error: 'user not found' })
 
-    findOne = (req: Request, res: Response) => {
-        this.repo.findOne(req.params.id, true, '')
-            .then(vals => res.status(200).json(vals.output()))
-            .catch(err => res.json(new Error('something went wrong')))
+            })
+            .catch(err => res.status(400).json({ error: err }))
     }
-    find = (req: Request, res: Response) => {
-        this.repo.find({}, true, '')
-            .then(vals => res.status(200).json(vals.map(val => val.output())))
-            .catch(err => res.json(new Error('something went wrong')))
-    }
-    create = (req: Request, res: Response) => {
-        this.repo.create(req.body)
-            .then(vals => res.status(200).json(Array.isArray(vals) ? vals.map(value => value.output()) : vals.output()))
-            .catch(err => res.json(new Error('something went wrong')))
-    }
-
 }
