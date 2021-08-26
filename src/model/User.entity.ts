@@ -9,11 +9,11 @@ export class User extends ApiModel {
     lastName: string
     @Property({ nullable: false, validate: 'asString', output: true })
     email: string
-    @Property({ nullable: false, validate: 'asString'})
+    @Property({ nullable: false, validate: 'asString' })
     password: string
 
     @BeforeCreate()
-    saltPassword () {
+    saltPassword() {
         this.password = hashSync(this.password, 10)
     }
 }
