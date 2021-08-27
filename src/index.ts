@@ -3,8 +3,6 @@ import * as dotenv from 'dotenv'
 import cluster from "./utils/cluster"
  
 dotenv.config()
-
-console.log('init database for ', process.env.DB_PREFIX)
 export const db = DBConnector.getInstance({
     region: process.env.REGION,
     credentials: {

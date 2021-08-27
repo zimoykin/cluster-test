@@ -13,14 +13,14 @@ export default function () {
 }
 
 const subscribe = (buf: any) => {
-  console.log(JSON.parse(buf).id, JSON.parse(buf).message)
+  console.log(process.pid, JSON.parse(buf).id, JSON.parse(buf).message)
 }
 
 const startWorker = () => {
   const app = express()
   app.use('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log(`${req.method} ${req.url}`)
-    res.setHeader('pidAnswered', process.pid)
+    res.setHeader('pid-answered', process.pid)
     next()
   })
   //
@@ -32,11 +32,12 @@ const startWorker = () => {
   app.use(router())
   app.listen(process.env.PORT || 8001, () => {
     console.log(`🚀 Server ${process.pid} [${cluster.worker.id}] launched on port ${process.env.PORT || 8001}!`)
-    process.send(JSON.stringify({ id: cluster.worker.id, message: 'hi from here!'}))
+    process.send(JSON.stringify({ id: process.pid, message: 'Im online!'}))
   })
 }
 
 const master = () => {
+  console.log(process.pid, 'im your master')
   let cpus = os.cpus().length
   console.log(`👨‍👦‍👦 cluster started on ${os.platform()} platform and use ${cpus} cpu`)
   console.log(`free memory: ${os.freemem() / 1024 / 1024} mb`)
