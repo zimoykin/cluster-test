@@ -10,17 +10,11 @@ export default function () {
     /** user controller */
     let userController = UserController.instance()
     router.get('/user', userController.find)
-    console.log(process.pid, 'get', `/user`)
     router.get('/user/:id', userController.findOne)
-    console.log(process.pid, 'get', `/user/:id`)
     router.post('/user/signin', userController.create)
-    console.log(process.pid, 'post', `/user/signin`)
     router.post('/user/login', userController.login)
-    console.log(process.pid, 'post', `/user/login`)
     router.patch('/user/:id', userController.patch)
-    console.log(process.pid, 'patch', `/user/:id`)
     router.delete('/user/:id', userController.delete)
-    console.log(process.pid, 'delete', `/user/:id`)
 
     registerRoute.bind(router)
         (ActivityController.instance())
@@ -29,20 +23,31 @@ export default function () {
     router.get('/cluster', (_, res) => {
         res.send(`Cluster mode started. current PID: ${process.pid}`)
     })
+    router.get('/fib/:number', (req, res) => {
+        const fib = (n: number) => n <= 1 ? n : fib(n - 1) + fib(n - 2);
+        if (req.params.number) {
+            ( async () => {
+                const start = new Date()
+                const fibonacci = fib(Math.min(parseInt(req.params.number), 100))
+                const result = {
+                    from: Math.min(parseInt(req.params.number), 100), 
+                    fibonacci: fibonacci,
+                    time: (new Date().getTime()  - start.getTime()) / 1000,
+                    pid: process.pid
+                }
+                res.status(200).json(result)
+            })()
+        } else res.status(400).json({error: 'number is required'})
+    })
 
     return router
 }
 
 function registerRoute<R extends ApiModel, T extends RestController<R>>(controller: T) {
     this.get(`/${controller.path}`, controller.find)
-    console.log(process.pid, 'get', `/${controller.path}`)
     this.get(`/${controller.path}/:id`, controller.findOne)
-    console.log(process.pid, 'get', `/${controller.path}/:id`)
     this.post(`/${controller.path}`, controller.create)
-    console.log(process.pid, 'post', `/${controller.path}`)
     this.patch(`/${controller.path}/:id`, controller.patch)
-    console.log(process.pid, 'patch', `/${controller.path}/:id`)
     this.delete(`/${controller.path}/:id`, controller.delete)
-    console.log(process.pid, 'delete', `/${controller.path}/:id`)
     return registerRoute.bind(this)
 }

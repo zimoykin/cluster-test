@@ -3,16 +3,17 @@ import * as dotenv from 'dotenv'
 import cluster from "./utils/cluster"
  
 dotenv.config()
+const { REGION, AWSAccessKeyId, AWSSecretKey, REDIS_HOST, REDIS_PORT, DB_PREFIX } = process.env
 export const db = DBConnector.getInstance({
-    region: process.env.REGION,
+    region: REGION || '',
     credentials: {
-        accessKeyId: process.env.AWSAccessKeyId,
-        secretAccessKey: process.env.AWSSecretKey
+        accessKeyId: AWSAccessKeyId || '',
+        secretAccessKey: AWSSecretKey || ''
     }, 
-    databaseName: process.env.DB_PREFIX||'test',
+    databaseName: DB_PREFIX || 'test',
     redis: {
-        host: process.env.REDIS_HOST || "localhost",
-        port: parseInt(process.env.REDIS_PORT) || 6379
+        host: REDIS_HOST || 'localhost',
+        port: parseInt(REDIS_PORT!) || 6379
     }
   })
 cluster()
