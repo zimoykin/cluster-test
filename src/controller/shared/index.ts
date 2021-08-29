@@ -4,6 +4,7 @@ import { ActivityController } from "../activity.controller"
 import { AdvertisingController } from "../ad.controller"
 import { UserController } from "../user.controller"
 import { RestController } from "./restApi.controller"
+import { authorization } from '../../utils/jwt.auth'
 
 export default function () {
     const router = Router()
@@ -44,10 +45,20 @@ export default function () {
 }
 
 function registerRoute<R extends ApiModel, T extends RestController<R>>(controller: T) {
-    this.get(`/${controller.path}`, controller.find)
-    this.get(`/${controller.path}/:id`, controller.findOne)
-    this.post(`/${controller.path}`, controller.create)
-    this.patch(`/${controller.path}/:id`, controller.patch)
-    this.delete(`/${controller.path}/:id`, controller.delete)
+    this.get(`/${controller.path}`, 
+        authorization, 
+        controller.find)
+    this.get(`/${controller.path}/:id`, 
+        authorization, 
+        controller.findOne)
+    this.post(`/${controller.path}`, 
+        authorization, 
+        controller.create)
+    this.patch(`/${controller.path}/:id`, 
+        authorization, 
+        controller.patch)
+    this.delete(`/${controller.path}/:id`, 
+        authorization,
+        controller.delete)
     return registerRoute.bind(this)
 }

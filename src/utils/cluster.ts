@@ -13,7 +13,7 @@ export default function () {
   else startWorker()
 }
 
-const subscribe = (buf: any) => {
+const handleMessage = (buf: any) => {
   console.log(process.pid, JSON.parse(buf).pid, JSON.parse(buf).message)
 }
 
@@ -41,11 +41,11 @@ const master = () => {
   console.log(process.pid, 'im your master')
   let cpus = os.cpus().length
   console.log(`👨‍👦‍👦 cluster started on ${os.platform()} platform and use ${cpus} cpu`)
-  console.log(`free memory: ${os.freemem() / 1024 / 1024} mb`)
+  console.log(`free memory: ${Math.round( 100 * os.freemem() / 1024 / 1024 ) / 100 } mb`)
   for (let i = 0; i < cpus; i++) { 
     cluster.fork()
   }
   SocketServer.instance(5339)
   cluster.on('exit', () => cluster.fork())
-
+  
 }

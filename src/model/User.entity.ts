@@ -6,10 +6,13 @@ import { hashSync } from 'bcrypt'
 export class User extends ApiModel {
     @Property({ nullable: false, validate: 'asString', output: true })
     firstName: string
+    
     @Property({ nullable: false, validate: 'asString', output: true })
     lastName: string
+
     @Property({ nullable: false, validate: 'asString', output: true })
     email: string
+    
     @Property({ nullable: false, validate: 'asString' })
     password: string
 

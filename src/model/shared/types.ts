@@ -1,0 +1,1 @@
+export type ActivityType = 'runnig'|'walking'|'cycling'|'high intensive'|'cross-fit'
