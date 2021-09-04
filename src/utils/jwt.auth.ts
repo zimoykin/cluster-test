@@ -29,7 +29,7 @@ export function authorization(req: Request, res: Response, next: NextFunction) {
                     const repo = new Repository(User)
                     repo.findOne(decoded?.id)
                         .then(val => {
-                            res['user'] = val
+                            req['user'] = val
                             next()
                         })
                         .catch(err => res.status(401).json({ error: err }))

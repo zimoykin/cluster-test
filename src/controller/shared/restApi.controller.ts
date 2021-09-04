@@ -1,6 +1,6 @@
-import { User } from "../../model/user.entity"
 import { ApiModel, Repository } from "zimoykin-dynamodb-orm"
 import { Request, Response } from "express"
+import { response } from '../../utils/response'
 
 export class RestController<T extends ApiModel> {
     public repo: Repository<T>
@@ -14,12 +14,12 @@ export class RestController<T extends ApiModel> {
 
     findOne = (req: Request, res: Response) => {
         this.repo.findOne(req.params.id, true, '')
-            .then(vals => res.status(200).json(vals.output()))
+            .then(vals => response(req, res, 200, vals.output()))
             .catch(err => res.status(400).json({error: err}))
     }
     find = (req: Request, res: Response) => {
         this.repo.find(req.query, true, '')
-            .then(vals => res.status(200).json(vals.map(val => val.output())))
+            .then(vals => response(req, res, 200, vals.map(val => val.output())))
             .catch(err => res.status(400).json({error: err}))
     }
     create = (req: Request, res: Response) => {

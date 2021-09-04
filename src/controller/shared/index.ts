@@ -5,21 +5,22 @@ import { AdvertisingController } from "../ad.controller"
 import { UserController } from "../user.controller"
 import { RestController } from "./restApi.controller"
 import { authorization } from '../../utils/jwt.auth'
+import { cache } from "../../utils/cache"
 
 export default function () {
     const router = Router()
     /** user controller */
-    let userController = UserController.instance()
+    const userController = UserController.instance()
+    const activity = ActivityController.instance()
     router.get('/user', userController.find)
     router.get('/user/:id', userController.findOne)
     router.post('/user/signin', userController.create)
     router.post('/user/login', userController.login)
     router.patch('/user/:id', userController.patch)
     router.delete('/user/:id', userController.delete)
+    router.get('/report', activity.report)
 
-    registerRoute.bind(router)
-        (ActivityController.instance())
-        (AdvertisingController.instance())
+    registerRoute.bind(router)(activity)(AdvertisingController.instance())
 
     router.get('/cluster', (_, res) => {
         res.send(`Cluster mode started. current PID: ${process.pid}`)
@@ -47,9 +48,11 @@ export default function () {
 function registerRoute<R extends ApiModel, T extends RestController<R>>(controller: T) {
     this.get(`/${controller.path}`, 
         authorization, 
+        cache,
         controller.find)
     this.get(`/${controller.path}/:id`, 
-        authorization, 
+        authorization,
+        cache,
         controller.findOne)
     this.post(`/${controller.path}`, 
         authorization, 
