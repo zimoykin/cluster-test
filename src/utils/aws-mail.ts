@@ -15,7 +15,7 @@ export class Mail {
         const transporter = nodemailer.createTransport({
             SES: this.mail
           });
-          transporter.sendMail({
+         return transporter.sendMail({
                 from: process.env.EMAILSENDER,
                 to: to,
                 subject: 'report',
@@ -24,7 +24,6 @@ export class Mail {
                         content: buf
                     }]
             })
-            .then((val) => console.log(val))
-            .catch(err=> console.log(err))
+
     }
 }

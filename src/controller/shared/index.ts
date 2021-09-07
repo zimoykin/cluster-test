@@ -18,7 +18,7 @@ export default function () {
     router.post('/user/login', userController.login)
     router.patch('/user/:id', userController.patch)
     router.delete('/user/:id', userController.delete)
-    router.get('/report', activity.report)
+    router.get('/report', authorization, activity.report)
 
     registerRoute.bind(router)(activity)(AdvertisingController.instance())
 

@@ -1,21 +1,27 @@
 import { Response } from 'express'
 import * as fs from 'fs'
 import { create, CreateOptions } from 'html-pdf'
+import { User } from '../model/user.entity'
 import { Mail } from './aws-mail'
 
 export class PDF {
     options: CreateOptions = {
-        format: 'A3',
-        type: 'pdf'
+        border: {
+            bottom: '10mm',
+            top: '10mm',
+            left: '10mm', 
+            right: '10mm'
+        }
     }
     static createDoc(
+        user: User,
         res: Response, 
         data: { [key: string]: any }, 
         images: { [key: string]: string }
     ) {
         const pdf = new PDF()
         let html = fs.readFileSync(__dirname + '/templates/template.html', 'utf-8')
-        console.log(data)
+
         for (let key in data) {
             switch( typeof data[key]) {
                 case 'string':{
@@ -30,11 +36,11 @@ export class PDF {
                     let newValue = ''
                     if (Array.isArray(data[key])) {
                         data[key].forEach( val => {
-                            newValue = newValue + `${val}`
+                            newValue += `${val}`
                         });
                     } else {
                         for (let subKey in data[key]) {
-                            newValue = newValue + `${subKey}: ${data[key][subKey]}<br>`
+                            newValue += `${subKey}: ${data[key][subKey]}<br>`
                         }
                         html = html.replace(`{{${key}}}`, `${newValue}`);
                     }
@@ -54,16 +60,20 @@ export class PDF {
         var bufs = new Array<any>();
         create(html, pdf.options)
         .toStream((err, buf) => {
-            res.setHeader('Content-type', 'application/pdf')
-            buf.pipe(res)
-            buf.on('data', (chunk) => {
-                bufs.push(chunk)   
-            })
-            buf.on('end', () => {
-                const mail = new Mail()
-                console.log(Buffer.concat(bufs))
-                mail.send(Buffer.concat(bufs), 'zimoykin+pdf@gmail.com')
-            })
+            if (err) {
+                console.log(err)
+                res.status(400).json({ error: err})
+            } else {
+                res.setHeader('Content-type', 'application/pdf')
+                buf.pipe(res)
+                buf.on('data', (chunk) => {
+                    bufs.push(chunk)   
+                })
+                buf.on('end', () => {
+                    const mail = new Mail()
+                    mail.send(Buffer.concat(bufs), user.email)
+                })
+            }
         })
     }
 }

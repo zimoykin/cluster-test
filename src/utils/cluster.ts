@@ -40,7 +40,7 @@ const startWorker = () => {
 
 const master = () => {
   console.log(process.pid, 'im your master')
-  let cpus = os.cpus().length
+  let cpus = Math.min(Math.floor(os.cpus().length /4), 2)
   console.log(`👨‍👦‍👦 cluster started on ${os.platform()} platform and use ${cpus} cpu`)
   console.log(`free memory: ${Math.round(100 * os.freemem() / 1024 / 1024) / 100} mb`)
   for (let i = 0; i < cpus; i++) {

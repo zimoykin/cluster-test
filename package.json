@@ -40,6 +40,6 @@
     "ts-node": "^10.2.1",
     "typescript": "^4.4.2",
     "uuid": "^8.3.2",
-    "zimoykin-dynamodb-orm": "^1.1.15"
+    "zimoykin-dynamodb-orm": "^1.1.16"
   }
 }

@@ -2,11 +2,11 @@
 
 <head>
     <meta charset="utf8">
-    <title>IB LONDON</title>
+    <title>REPORT</title>
     <style>
         body {
-            width: 210mm;
-            height: 100%;
+            width: 21cm;
+            height: 29.7cm;
             margin: 0 auto;
             padding: 0;
             font-size: 12pt;
@@ -26,33 +26,19 @@
         }
 
         .main-page {
-            width: 210mm;
-            min-height: 297mm;
-            background: white;
+            background: gray;
+            width: 21cm;
+            height: 29.7cm;
+            border-style: solid;
         }
-
-        .sub-page {
-            padding: 1cm;
-            height: 297mm;
-        }
-
         .center {
             text-align: center;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
         }
-
         .stroke {
             height: 0.5mm;
             margin: 1mm;
             width: 100%;
             background-color: black;
-        }
-
-        @page {
-            size: A3;
-            margin: 0;
         }
 
         * {
@@ -61,44 +47,35 @@
         }
 
         @media print {
-
-            html,
-            body {
+            html, body {
                 width: 210mm;
-                height: 100%;
-                margin-left: 1em;
-                margin-right: 1em;
+                height: 297mm;
+                align-self: center;
             }
-
-            .center {
-                text-align: center;
-                position: static;
-                left: 50%;
-                transform: translateX(-50%);
+            @page {
+                align-self: center;
+                size: A4;
+                padding: 0;
+                margin: 0; 
+                zoom: 75%;
+                orientation: 'portrait';
             }
-
             .main-page {
-                margin: 0;
-                border: initial;
-                border-radius: initial;
-                width: initial;
-                min-height: initial;
-                box-shadow: initial;
-                background: initial;
-                page-break-after: always;
+                width: 210mm;
+                background: lightpink;
+                border-style: solid;
             }
-
+            .stroke {
+                height: 0.5mm;
+                margin: 1mm;
+                width: 100%;
+                background-color: black;
+            }
             .p {
                 padding: 10mm;
             }
-
             .m {
                 margin: 10m;
-            }
-
-            .sub-page {
-                margin: 1cm;
-                height: 297mm;
             }
         }
     </style>
@@ -106,26 +83,21 @@
 
 <body>
     <div class="main-page">
-        <div class="sub-page">
-            <div class='center'>
-                <img src="{{img}}" />
-            </div>
-            <div class="center m p">
-                <span>{{UserName}}</span>
-            </div>
-            <div class="stroke m"></div>
-            <div class="center">
-                <h3>{{UserEmail}}</h3>
-                <span>{{Activity}}</span>
-            </div>
-            <br>
+        <div class=>
+            <img src="{{img}}" />
         </div>
+        <div class="m p">
+            <span>{{User}}</span>
+        </div>
+        <div class="stroke m"></div>
+        <div class="center">
+            <span>{{Activity}}</span>
+        </div>
+        <br>
     </div>
     <div class="main-page">
-        <div class="sub-page">
-            <div class='center p'>
-                <span> phone: +1 111 11 11 </span>
-            </div>
+        <div class='p'>
+            <span> phone: +1 111 11 11 </span>
         </div>
     </div>
 </body>
